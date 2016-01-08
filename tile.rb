@@ -1,5 +1,6 @@
 class Tile
   attr_reader :value
+  attr_writer :board
 
   RELATIVE_NEIGHBORS_POS = [
     [-1,-1], [-1, 0], [-1,1],
@@ -7,8 +8,7 @@ class Tile
     [1,-1], [1,0], [1,1]
   ]
 
-
-  def initialize(value, pos, board)
+  def initialize(value, pos, board = nil)
     @value = value
     @pos = pos
     @board = board
@@ -23,7 +23,7 @@ class Tile
 
   def reveal
     return if @flagged || @revealed
-
+    @revealed = true
     @value
   end
 
@@ -42,25 +42,30 @@ class Tile
       actual_neighbors_pos << @pos.zip(n_pos).map {|el| el.inject(:+)}
     end
 
-    @neighbors_pos = valid_positions(actual_neighbors_pos)
+    valid_positions(actual_neighbors_pos)
   end
 
   def valid_positions(position_array)
     # debugger
     position_array.select do |pos|
-      pos.all? { |el| el >= 0 && el < 9 }
+      pos.all? { |el| el.between?(0,9) }
       #{ |coord| coord.between?(0, 7) }
     end
   end
 
-  def neighbor_bomb_count
-    bomb_count = 0
+  def inspect
+    { 'value' => @value, 'position' => @pos }.inspect
+  end
 
-    @neighbors_pos.each do |n_pos|
-      bomb_count += 1 if board[n_pos].value == :bomb
+  def neighbor_bomb_count
+    return if @value == :bomb
+
+    bomb_count = 0
+    self.neighbors.each do |n_pos|
+      bomb_count += 1 if @board[n_pos].value == :bomb
     end
 
-    @value = bomb_count unless bomb_count.zero?
+    @value = bomb_count unless bomb_count.zero? || @value == :bomb
   end
 
 end
