@@ -3,7 +3,7 @@ require 'byebug'
 
 
 class Board
-  attr_reader :grid
+  attr_reader :grid, :size
 
 
   def initialize(size = 9, bomb_count = 10)
@@ -12,7 +12,12 @@ class Board
     @bomb_count = bomb_count
   end
 
-  def populate_board
+  def populate
+    self.populate_bomb
+    self.populate_numbers
+  end
+
+  def populate_bomb
     values = Array.new(@size**2 - @bomb_count)
     values.concat(Array.new(@bomb_count) {:bomb})
     values.shuffle!
@@ -30,7 +35,7 @@ class Board
   end
 
   def populate_numbers
-    debugger
+    # debugger
     @grid.each_with_index do |row, row_i|
       row.each_with_index do |col, col_i|
         pos = [row_i,col_i]

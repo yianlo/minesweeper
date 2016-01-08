@@ -48,13 +48,12 @@ class Tile
   def valid_positions(position_array)
     # debugger
     position_array.select do |pos|
-      pos.all? { |el| el.between?(0,9) }
-      #{ |coord| coord.between?(0, 7) }
+      pos.all? { |el| el.between?(0, @board.size - 1) }
     end
   end
 
   def inspect
-    { 'value' => @value, 'position' => @pos }.inspect
+    { 'value' => @value, 'position' => @pos,  }.inspect
   end
 
   def neighbor_bomb_count
@@ -65,7 +64,7 @@ class Tile
       bomb_count += 1 if @board[n_pos].value == :bomb
     end
 
-    @value = bomb_count unless bomb_count.zero? || @value == :bomb
+    @value = bomb_count unless bomb_count.zero?
   end
 
 end
