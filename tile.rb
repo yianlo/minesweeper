@@ -1,5 +1,5 @@
 class Tile
-  attr_reader :value
+  attr_reader :value, :revealed
   attr_writer :board
 
   RELATIVE_NEIGHBORS_POS = [
