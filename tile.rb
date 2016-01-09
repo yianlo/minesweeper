@@ -21,6 +21,10 @@ class Tile
     @revealed
   end
 
+  def flagged?
+    @flagged
+  end
+
   def reveal
     return if @flagged || @revealed
     @revealed = true
@@ -28,11 +32,11 @@ class Tile
   end
 
   def toggle_flag
-    !@flagged
+    @flagged = !@flagged
   end
 
   def bomb?
-    @value == :bomb && @revealed
+    @value == :B && @revealed
   end
 
   def neighbors
@@ -57,11 +61,11 @@ class Tile
   end
 
   def neighbor_bomb_count
-    return if @value == :bomb
+    return if @value == :B
 
     bomb_count = 0
     self.neighbors.each do |n_pos|
-      bomb_count += 1 if @board[n_pos].value == :bomb
+      bomb_count += 1 if @board[n_pos].value == :B
     end
 
     @value = bomb_count unless bomb_count.zero?
